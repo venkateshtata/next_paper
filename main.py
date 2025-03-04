@@ -361,39 +361,63 @@ def search_arxiv(topic=None, conference=None, max_results=100):
     default_categories = ["cs.AI", "cs.LG", "cs.CV", "cs.CL", "cs.RO", "cs.NE", "stat.ML"]
     
     # Build the query with quotes for exact phrase matching
+    categories = default_categories.copy()  # Always start with a copy to avoid modifying the original
+    
     if topic and conference:
-        conference_cat = conference_mapping.get(conference.upper(), conference)
+        # Handle case where both topic and conference are specified
+        conference_upper = conference.upper() if conference else ""
+        conference_cat = conference_mapping.get(conference_upper, "")
+        
         # If conference is mapped to a category, use it as filter and topic as search term
-        if conference_cat in conference_mapping.values():
+        if conference_cat and conference_cat in list(conference_mapping.values()):
             query = f'"{topic}"'
-            categories = [conference_cat]
+            if " OR " in conference_cat:
+                categories = [cat.strip() for cat in conference_cat.split(" OR ")]
+            else:
+                categories = [conference_cat]
         else:
             # Otherwise treat conference as keyword
             query = f'"{topic}" AND "{conference}"'
-            categories = default_categories
     elif topic:
+        # Only topic specified
         query = f'"{topic}"'
-        categories = default_categories
     elif conference:
-        conference_cat = conference_mapping.get(conference.upper(), conference)
-        if conference_cat in conference_mapping.values():
+        # Only conference specified
+        conference_upper = conference.upper() if conference else ""
+        conference_cat = conference_mapping.get(conference_upper, "")
+        
+        if conference_cat and conference_cat in list(conference_mapping.values()):
             query = conference
-            categories = [conference_cat]
+            if " OR " in conference_cat:
+                categories = [cat.strip() for cat in conference_cat.split(" OR ")]
+            else:
+                categories = [conference_cat]
         else:
             query = f'"{conference}"'
-            categories = default_categories
     else:
         return []
     
     print(f"Searching arXiv with query: {query}, categories: {categories}")
+    
+    # Current arxiv library doesn't support categories parameter directly
+    # So we need to include it in the query string
+    if categories and isinstance(categories, list) and len(categories) > 0:
+        # Add category filtering to the query
+        category_filter = " OR ".join([f"cat:{cat}" for cat in categories])
+        if query:
+            # Combine with the existing query using AND
+            query = f"({query}) AND ({category_filter})"
+        else:
+            query = category_filter
+    
+    print(f"Final arXiv query: {query}")
     
     # Sort by submission date, newest first
     search = arxiv.Search(
         query=query,
         max_results=max_results,
         sort_by=arxiv.SortCriterion.SubmittedDate,
-        sort_order=arxiv.SortOrder.Descending,
-        categories=categories
+        sort_order=arxiv.SortOrder.Descending
     )
     
     papers = []
