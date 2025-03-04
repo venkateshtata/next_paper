@@ -12,8 +12,6 @@
 
 **Next AI Paper** is a powerful Streamlit application designed to help AI researchers identify promising research directions based on the latest publications from arXiv. The application leverages Claude AI to generate detailed, hardware-aware research ideas tailored to your computational resources and expertise level.
 
-> *"Finding the next research direction shouldn't be a bottleneck in scientific progress."*
-
 ## ✨ Key Features
 
 - **📚 Smart Paper Selection**: Search and browse hundreds of recent papers by topic or conference
@@ -23,7 +21,16 @@
 - **📝 Comprehensive Output**: Get detailed methodology, implementation guidance, and challenge analysis
 - **💾 Export Options**: Download generated research ideas in both Markdown and plain text formats
 
-## 🛠️ Installation
+## 🌐 Public Access
+
+Access the application directly online at: 
+[https://nextaipaper.streamlit.app](https://nextaipaper.streamlit.app) (Replace with your actual URL once deployed)
+
+No installation required - just bring your Claude API key!
+
+## 🛠️ Local Installation
+
+If you prefer to run the application locally:
 
 ```bash
 # Clone the repository
@@ -43,6 +50,15 @@ streamlit run main.py
 - Streamlit 1.31.0+
 - Anthropic Claude API key
 - Internet connection for arXiv access
+
+### 🔑 Getting a Claude API Key
+
+To use Next AI Paper, you'll need a Claude API key:
+
+1. Sign up for [Anthropic's Claude API](https://www.anthropic.com/product)
+2. Create an API key in your dashboard
+3. Copy your API key and use it in the application
+4. **Note**: API usage may incur charges based on Anthropic's pricing
 
 ## 🧩 How It Works
 
