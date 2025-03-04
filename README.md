@@ -1,52 +1,96 @@
-# AI Research Idea Finder
+# 📄 Next AI Paper 
 
-A minimalistic Streamlit web application that helps researchers discover new AI research paper ideas based on the latest publications from arXiv.
+<div align="center">
+  <img src="research-paper.png" alt="Next AI Paper Logo" width="120"/>
+  <h3>Beam search your next AI paper idea</h3>
+  <p><i>Discover groundbreaking research directions tailored to your resources and expertise</i></p>
+</div>
 
-## Features
+---
 
-- Search for the latest papers by topic, conference, or both
-- Specify the number of papers to retrieve (20-500)
-- Generate novel research ideas using Claude AI
-- Download generated research ideas as text files
-- No sign-in required - just provide your Claude API key for the session
+## 🚀 Overview
 
-## Setup and Installation
+**Next AI Paper** is a powerful Streamlit application designed to help AI researchers identify promising research directions based on the latest publications from arXiv. The application leverages Claude AI to generate detailed, hardware-aware research ideas tailored to your computational resources and expertise level.
 
-1. Clone this repository
-2. Install the required dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
-3. Run the Streamlit app:
-   ```
-   streamlit run main.py
-   ```
+> *"Finding the next research direction shouldn't be a bottleneck in scientific progress."*
 
-## Usage
+## ✨ Key Features
 
-1. Open the web app in your browser
-2. Enter your Claude API key in the sidebar (this is only stored for the current session)
-3. Provide a nickname for your session
-4. Set your search parameters:
-   - Choose to search by topic, conference, or both
-   - Enter your search terms
-   - Set the number of papers to retrieve
-   - Set the number of research ideas to generate
-5. Click "Search Papers" to retrieve relevant papers
-6. Click "Generate Research Ideas" to get AI-generated research ideas based on the retrieved papers
-7. Download the generated ideas as a text file if desired
+- **📚 Smart Paper Selection**: Search and browse hundreds of recent papers by topic or conference
+- **🔍 Interactive Paper Exploration**: Select the most relevant papers to inspire your research
+- **💡 Tailored Research Ideas**: Generate novel research ideas customized to your specific hardware setup
+- **⚙️ Hardware-Aware Suggestions**: Specify your GPU resources, time constraints, and expertise level
+- **📝 Comprehensive Output**: Get detailed methodology, implementation guidance, and challenge analysis
+- **💾 Export Options**: Download generated research ideas in both Markdown and plain text formats
 
-## Requirements
+## 🛠️ Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/next-paper.git
+cd next-paper
+
+# Install required dependencies
+pip install -r requirements.txt
+
+# Launch the application
+streamlit run main.py
+```
+
+## 🔧 Requirements
 
 - Python 3.7+
-- Streamlit
-- arXiv API
+- Streamlit 1.31.0+
 - Anthropic Claude API key
+- Internet connection for arXiv access
 
-## Note
+## 🧩 How It Works
 
-This application requires a valid Claude API key to generate research ideas. Your API key is only used during the current session and is not stored anywhere.
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><b>Search</b></td>
+      <td align="center"><b>Select</b></td>
+      <td align="center"><b>Generate</b></td>
+    </tr>
+    <tr>
+      <td>Find the latest papers on your research topic</td>
+      <td>Choose up to 10 papers that interest you</td>
+      <td>Get AI-generated research ideas based on your selection</td>
+    </tr>
+  </table>
+</div>
 
-## License
+## 💻 Resource-Aware Research Ideas
+
+Specify your computational environment to get feasible research directions:
+
+- **GPU Configuration**: Type, count, and memory
+- **Time Constraints**: Project timeline expectations
+- **Expertise Level**: Coding and research experience
+- **Team Structure**: Solo researcher or team size
+
+## 📊 Workflow
+
+1. **Configure**: Enter your Claude API key and researcher profile
+2. **Search**: Retrieve papers by topic or conference
+3. **Refine**: Filter and select the most relevant papers
+4. **Customize**: Set your hardware specifications and constraints
+5. **Generate**: Get detailed, resource-aware research ideas
+6. **Export**: Download your research roadmap in your preferred format
+
+## 🔒 Privacy
+
+- Your Claude API key is only used during the current session
+- No data is stored on our servers
+- All processing happens in your local environment
+
+## 📜 License
 
 MIT
+
+---
+
+<div align="center">
+  <p>Built with ❤️ for the AI research community</p>
+</div>
