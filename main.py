@@ -227,11 +227,26 @@ with st.sidebar:
     st.markdown('<p style="font-weight: 600; margin-bottom: 5px;">Search Parameters</p>', unsafe_allow_html=True)
     search_type = st.radio("Search by:", ["Topic", "Conference", "Both"])
     
+    # Add search tips
+    with st.expander("📋 Search Tips"):
+        st.markdown("""
+        **Topic Search Tips:**
+        - Use specific phrases like "diffusion models" or "graph neural networks"
+        - Include application areas like "medical image segmentation" or "robot navigation"
+        - Try trending topics like "Large Language Models" or "Reinforcement Learning from Human Feedback"
+        
+        **Conference Tips:**
+        - Use conference acronyms: CVPR, ICLR, NeurIPS, ACL, ICML, etc.
+        - For computer vision research, try: CVPR, ICCV, ECCV
+        - For NLP research, try: ACL, EMNLP, NAACL
+        - For machine learning research, try: NeurIPS, ICLR, ICML
+        """)
+    
     topic = None
     conference = None
     if search_type == "Topic" or search_type == "Both":
         topic = st.text_input("Research Topic", 
-                            help="E.g., 'Reinforcement Learning', 'Computer Vision'")
+                            help="E.g., 'Reinforcement Learning', 'Diffusion Models', 'Graph Neural Networks'")
     if search_type == "Conference" or search_type == "Both":
         conference = st.text_input("Conference", 
                                  help="E.g., CVPR, ICLR, NeurIPS, ACL")
@@ -322,21 +337,63 @@ st.markdown('<p class="logo-tagline">Beam search your next AI paper idea.</p>', 
 def search_arxiv(topic=None, conference=None, max_results=100):
     query = ""
     
+    # Map common conferences to their arXiv categories and keywords
+    conference_mapping = {
+        "CVPR": "cs.CV",
+        "ICCV": "cs.CV",
+        "ECCV": "cs.CV",
+        "ICLR": "cs.LG",
+        "NeurIPS": "cs.LG OR cs.AI",
+        "ICML": "cs.LG",
+        "ACL": "cs.CL",
+        "EMNLP": "cs.CL",
+        "NAACL": "cs.CL",
+        "AAAI": "cs.AI",
+        "IJCAI": "cs.AI",
+        "SIGGRAPH": "cs.GR",
+        "KDD": "cs.DB OR cs.LG",
+        "SIGIR": "cs.IR",
+        "ICRA": "cs.RO",
+        "IROS": "cs.RO"
+    }
+    
+    # AI/ML research categories to search within by default
+    default_categories = ["cs.AI", "cs.LG", "cs.CV", "cs.CL", "cs.RO", "cs.NE", "stat.ML"]
+    
+    # Build the query with quotes for exact phrase matching
     if topic and conference:
-        query = f"{topic} AND {conference}"
+        conference_cat = conference_mapping.get(conference.upper(), conference)
+        # If conference is mapped to a category, use it as filter and topic as search term
+        if conference_cat in conference_mapping.values():
+            query = f'"{topic}"'
+            categories = [conference_cat]
+        else:
+            # Otherwise treat conference as keyword
+            query = f'"{topic}" AND "{conference}"'
+            categories = default_categories
     elif topic:
-        query = topic
+        query = f'"{topic}"'
+        categories = default_categories
     elif conference:
-        query = conference
+        conference_cat = conference_mapping.get(conference.upper(), conference)
+        if conference_cat in conference_mapping.values():
+            query = conference
+            categories = [conference_cat]
+        else:
+            query = f'"{conference}"'
+            categories = default_categories
     else:
         return []
+    
+    print(f"Searching arXiv with query: {query}, categories: {categories}")
     
     # Sort by submission date, newest first
     search = arxiv.Search(
         query=query,
         max_results=max_results,
         sort_by=arxiv.SortCriterion.SubmittedDate,
-        sort_order=arxiv.SortOrder.Descending
+        sort_order=arxiv.SortOrder.Descending,
+        categories=categories
     )
     
     papers = []
@@ -538,13 +595,40 @@ if search_clicked:
                 st.warning("No papers found matching your criteria. Try adjusting your search terms.")
             else:
                 st.session_state.papers = papers
+                # Save search parameters for display
+                st.session_state.last_search = {
+                    "topic": topic,
+                    "conference": conference,
+                    "count": len(papers)
+                }
                 # Reset selected papers when new search is performed
                 st.session_state.selected_papers = []
-                st.success(f"Found {len(papers)} papers on the topic.")
+                
+                # Display more informative success message
+                if topic and conference:
+                    st.success(f"Found {len(papers)} papers on '{topic}' related to {conference}.")
+                elif topic:
+                    st.success(f"Found {len(papers)} papers on '{topic}'.")
+                elif conference:
+                    st.success(f"Found {len(papers)} papers from {conference}.")
 
 # Display papers and selection checkboxes if papers exist
 if st.session_state.get("papers"):
-    st.subheader("Retrieved Papers")
+    # Display the search parameters in the header
+    if st.session_state.get("last_search"):
+        search_info = st.session_state.last_search
+        search_description = ""
+        if search_info["topic"] and search_info["conference"]:
+            search_description = f"on '{search_info['topic']}' related to {search_info['conference']}"
+        elif search_info["topic"]:
+            search_description = f"on '{search_info['topic']}'"
+        elif search_info["conference"]:
+            search_description = f"from {search_info['conference']}"
+            
+        st.subheader(f"Retrieved Papers ({search_info['count']} papers {search_description})")
+    else:
+        st.subheader("Retrieved Papers")
+        
     st.markdown("Select up to 10 papers that you want to use for generating research ideas.")
     
     # Display count of selected papers
