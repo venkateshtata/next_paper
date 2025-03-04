@@ -24,7 +24,7 @@
 ## 🌐 Public Access
 
 Access the application directly online at: 
-[https://nextaipaper.streamlit.app](https://nextaipaper.streamlit.app) (Replace with your actual URL once deployed)
+[https://nextaipaper.streamlit.app](https://nextaipaper.streamlit.app)
 
 No installation required - just bring your Claude API key!
 
